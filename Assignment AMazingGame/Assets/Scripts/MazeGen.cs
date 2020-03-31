@@ -29,6 +29,7 @@ public class MazeGen
 	private float density = 0.75f;
 	public float Density { get { return density; } }
 
+
 	public MazeGen() { }
 
 	public void GenerateMaze(int mazeWidth, int mazeHeight)
