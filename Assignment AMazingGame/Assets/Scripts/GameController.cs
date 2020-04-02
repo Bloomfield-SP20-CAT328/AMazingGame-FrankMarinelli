@@ -5,17 +5,18 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-	public int mazeWidth = 30;
-	public int mazeHeight = 30;
+    //Nothing here should cause problems. Go to MazeGen.
+    //I removed the int values.
+	public int mazeWidth;
+	public int mazeHeight;
 	public GameObject visibleMaze;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	void Start()
+	{
 		MazeGen mazeGenerate = new MazeGen();
 		mazeGenerate.GenerateMaze(mazeWidth, mazeHeight);
-        
-    }
+		
+	}
 
-    
 }
