@@ -323,8 +323,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 378f9cbcf246a4e259d3bff4506f370e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mazeWidth: 30
-  mazeHeight: 30
+  mazeWidth: 20
+  mazeHeight: 20
   visibleMaze: {fileID: 8658712315236528706, guid: 089ef6a43899e4a18940d95c56ff3734,
     type: 3}
 --- !u!4 &1278932293

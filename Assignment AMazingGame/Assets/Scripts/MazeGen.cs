@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MazeGen
 {
@@ -65,8 +66,8 @@ public class MazeGen
 
         for (int i = 0; i < density; i++)
 		{
-			var x = (int)(Random.Range(0, (int)width / 2) * 2);
-			var y = (int)(Random.Range(0, (int)width / 2) * 2);
+			var x = (int)(Random.Range(0, (int)width / 2) * 3);
+			var y = (int)(Random.Range(0, (int)width / 2) * 3);
 			maze[x, y] = 1;
             for(var j = 0; j<complexity; j++)
 			{
