@@ -43,8 +43,8 @@ public class MazeGen
 	{
 		complexity = mazeComplexity;
 		density = mazeDensity;
-		width = (int)(mazeWidth / 2) * 2 + 1;
-		height = (int)(mazeHeight / 2) * 2 + 1;
+		width = (int)(mazeWidth / 2) * 3 + 1;
+		height = (int)(mazeHeight / 2) * 3 + 1;
 		complexity = (int)(complexity * 5 * (width + height));
 		density = (float)Mathf.Floor(density * (int)(height / 2) * (int)(width / 2));
 		maze = new byte[width, height];
@@ -73,24 +73,24 @@ public class MazeGen
 			{
 				Debug.Log("I'm going to go for: " + x + "," + y);
 				List<Point> neighbors = new List<Point>();
-				if (x > 1)
+				if (x > 3)
 				{
 					neighbors.Add(new Point(x - 2, y));
 				}
-				if (x < width - 2)
+				if (x < width - 4)
 				{
 					neighbors.Add(new Point(x + 2, y));
 				}
-				if (y > 1)
+				if (y > 3)
 				{
 					neighbors.Add(new Point(x, y - 2));
 				}
-				if (y < height - 2)
+				if (y < height - 4)
 				{
 					neighbors.Add(new Point(x, y + 2));
 				}
 
-				if (neighbors.Count > 0)
+				if (neighbors.Count > 1)
 				{
 					Point newLocation = neighbors[Random.Range(0, neighbors.Count)];
 					int xx = (int)newLocation.x;
