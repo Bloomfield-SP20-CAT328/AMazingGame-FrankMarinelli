@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -17,6 +18,11 @@ public class GameController : MonoBehaviour
 		MazeGen mazeGenerate = new MazeGen();
 		mazeGenerate.GenerateMaze(mazeWidth, mazeHeight);
 		
+	}
+
+    public void RegenerateButton(string regenerateMaze)
+	{
+		SceneManager.LoadScene(regenerateMaze);
 	}
 
 }
