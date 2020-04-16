@@ -2,104 +2,153 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
-public class GameController : MonoBehaviour
-{
+public class GameController : MonoBehaviour {
+	static private GameController instance = null;
+    static public GameController Instance
+	{
+		get
+		{
+            if (instance == null)
+			{
+				instance = FindObjectOfType<GameController>();
+                if (instance == null)
+				{
+					GameObject go = new GameObject();
+					go.name = "GameController";
+					instance = go.AddComponent<GameController>();
+				}
+			}
+			return instance;
+		}
+	}
 
-	public int mazeWidth = 40;
-	public int mazeHeight = 40;
+
+
+	// Should be odd, but hey, our Maze class with fix that!
+	public int mazeWidth = 50;
+	public int mazeHeight = 50;
+	// Since we should also control this, let's make these class variables	
 	public float mazeComplexity = 0.75f;
 	public float mazeDensity = 0.75f;
-	public Text widthTextElement;
-	public Text heightTextElement;
-	public Slider complexitySliderUIElement;
-	public Slider densitySliderUIElement;
-	public Text complexityTextElement;
-	public Text densityTextElement;
-	Maze myMazeGen = new MazeGen();
-	GameObject visibleMaze;
 
-	// Start is called before the first frame update
-	void Start()
+	public InputField widthText;
+	public InputField heightText;
+	public Slider complexitySlider;
+	public Slider densitySlider;
+	public Text complexityText;
+	public Text densityText;
+
+	Maze maze = new Maze();
+	GameObject mazeBase;
+
+    void Awake()
 	{
-		UpdateDensityTextUI();
-		UpdateComplexityTextUI();
-		visibleMaze = new GameObject("VisibleMaze GameObject");
-		GenerateMaze();
-		DrawTheMaze();
-
-	}
-
-	public void RegenerateButton(string regenerateMaze)
-	{
-		SceneManager.LoadScene(regenerateMaze);
-	}
-
-	public void UpdateDensityTextUI()
-	{
-		densityTextElement.text = "Density: " + densitySliderUIElement.value.ToString("00.00");
-	}
-
-	public void UpdateComplexityTextUI()
-	{
-		complexityTextElement.text = "Complexity: " + complexitySliderUIElement.value.ToString("00.00");
-	}
-
-	public void GenerateMaze_ClickHandler()
-	{
-		if (widthTextElement.text == "" || heightTextElement.text == "")
+        if (instance != null)
 		{
+			Destroy(this.gameObject);
+		} else
+		{
+			instance = this;
+		}
+	}
+
+	void Start () {
+		UpdateDensityText();
+		UpdateComplexityText();
+		mazeBase = new GameObject("Maze GameObject");
+		GenerateMaze();
+		DrawMaze();
+	}
+
+	#region Update UI Values
+	public void UpdateDensityText() { densityText.text = "Density: " + densitySlider.value.ToString("00.0000"); }
+
+	public void UpdateComplexityText() { complexityText.text = "Complexity: " + complexitySlider.value.ToString("00.0000"); }
+
+	public void UpdateWidthValue() { 
+		mazeWidth = maze.Width;
+		widthText.text = mazeWidth.ToString(); 
+	}
+
+	public void UpdateHeightValue() { 
+		mazeHeight = maze.Height;
+		Point a = new Point();
+		heightText.text = mazeHeight.ToString(); 
+	}
+	#endregion
+
+	public void RegenerateMaze_ClickHandler() {
+		if(widthText.text=="" || heightText.text=="") {
+			// @TODO Should alert you, but who has time for that!
 			return;
 		}
-		int width = int.Parse(widthTextElement.text);
-		int height = int.Parse(heightTextElement.text);
-		float complexity = complexitySliderUIElement.value;
-		float density = densitySliderUIElement.value;
+
+		int width = int.Parse(widthText.text);
+		int height = int.Parse(heightText.text);
+		float complexity = complexitySlider.value;
+		float density = densitySlider.value;
+
+		// Check if valid?...
 		mazeWidth = width;
 		mazeHeight = height;
-		mazeComplexity = compelxity;
+		mazeComplexity = complexity;
 		mazeDensity = density;
+
 		ClearMaze();
 		GenerateMaze();
-		DrawTheMaze();
+		DrawMaze();
+		
 	}
 
-	protected void GenerateMaze()
-	{
-		myMazeGen.GenerateMaze(mazeWidth, mazeHeight, mazeComplexity, mazeDensity);
-
+	protected void GenerateMaze() {
+		maze.GenerateMaze(mazeWidth,mazeHeight,mazeComplexity,mazeDensity);
+		UpdateWidthValue();
+		UpdateHeightValue();
+		PlaceThePlayer();
 	}
 
-	protected void DrawTheMaze()
-	{
-		//Warning, the colors I chose for this portion of the code might make your eyes vomit. I take no responsibility if your eyes vomit from my colors.
-		GameObject mazeFloor = GameObject.CreatePrimitive(PrimitiveType.Plane);
-		mazeFloor.transform.position = new Vector3(myMazeGen.Width / 2, 0, myMazeGen.Height / -2);
-		mazeFloor.transform.localScale = new Vector3(myMazeGen.Width / 10.0f, 1.0f, myMazeGen.Height / 10.0f);
-		mazeFloor.transform.parent = visibleMaze.transform;
-		mazeFloor.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
-		for (int y = 0; y < myMazeGen.Height; y++)
-		{
-			for (int x = 0; x < myMazeGen.Width; x++)
-			{
-				if (myMazeGen.IsAWall(x, y))
-				{
-					GameObject mazeCube = GameObject.GetPrimitive(PrimitiveType.Cube);
-					mazeCube.transform.position = new Vector3(x, 0.5f, y * -1);
-					mazeCube.transform.localScale = new Vector3(1, 1, 1);
-					mazeCube.transform.parent = visibleMaze.transform;
-					mazeCube.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 1.0f);
+	protected void DrawMaze() {
+		// Make floor (and make it bright green)
+		GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
+		floor.transform.position = new Vector3(maze.Width/2,0,maze.Height/-2);
+		floor.transform.localScale = new Vector3(maze.Width/10.0f,1.0f,maze.Height/10.0f);
+		// Add this to the mazeBase
+		floor.transform.parent = mazeBase.transform;
+		floor.GetComponent<Renderer>().material.color = new Color(0.0f, 1.0f, 0.0f);
+
+		// Make walls (and make it a darker green)
+		for(int y = 0; y<maze.Height; y++) {
+			for(int x = 0; x<maze.Width; x++) {
+				if(maze.IsWall(x,y)) {
+					GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+					cube.transform.position = new Vector3(x, 0.5f, y * -1);
+					cube.transform.localScale = new Vector3 (1, 1, 1);
+					// Add this to the mazeBase (so we don't have a bunch of Cubes in the Heirarchy)
+					cube.transform.parent = mazeBase.transform;
+					cube.GetComponent<Renderer>().material.color = new Color(0.3f, 0.5f, 0.1f);
 				}
 			}
 		}
-		float cameraY = (myMazeGen.Width < myMazeGen.Height) ? myMazeGen.Height + 2 : myMazeGen.Width + 2;
-		Camera.main.transform.position = new Vector3(myMazeGen.Width / 2.0f, cameraY, -1 * myMazeGen.Height / 2.0f);
-	}
-	protected void ClearMaze()
-	{
-		Destroy(visibleMaze);
-		visibleMaze = new GameObject("VisibleMaze GameObject");
+
+		// Move the camera to show the whole maze
+		float cameraY = (maze.Width<maze.Height) ? maze.Height + 1 : maze.Width + 1;
+		Camera.main.transform.position = new Vector3(maze.Width/2.0f,cameraY,-1*maze.Height/2.0f);		
 	}
 
+	protected void ClearMaze() {
+		Destroy(mazeBase);
+		mazeBase = new GameObject("Maze GameObject");
+	}
+
+    protected void PlaceThePlayer()
+	{
+		Point placePlayer = maze.RandomOpenPosition();
+		GameObject player = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		player.transform.position = new Vector3(placePlayer.x, 0.5f, placePlayer.y * -1);
+		player.AddComponent<PlayerController>();
+	}
+
+
+    //protected void PlaceTheEnemy()
 }
