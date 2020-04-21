@@ -106,6 +106,7 @@ public class GameController : MonoBehaviour {
 		UpdateWidthValue();
 		UpdateHeightValue();
 		PlaceThePlayer();
+		PlaceTheEnemy();
 	}
 
 	protected void DrawMaze() {
@@ -150,5 +151,14 @@ public class GameController : MonoBehaviour {
 	}
 
 
-    //protected void PlaceTheEnemy()
+    protected void PlaceTheEnemy()
+	{
+		Point placeEnemy = maze.RandomOpenPosition();
+		GameObject enemy = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		enemy.transform.position = new Vector3(placeEnemy.x, 0.5f, placeEnemy.y * -1);
+		enemy.transform.localScale = new Vector3(1.0f, 0.5f, 1.0f);
+		enemy.AddComponent<Enemy>();
+
+
+	}
 }
