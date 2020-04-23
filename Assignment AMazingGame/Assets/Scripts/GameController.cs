@@ -38,8 +38,10 @@ public class GameController : MonoBehaviour {
 	public Slider densitySlider;
 	public Text complexityText;
 	public Text densityText;
+	public int enemyAICounter;
+	private int enemyAIMax = 3;
 
-	Maze maze = new Maze();
+	public Maze maze = new Maze();
 	GameObject mazeBase;
 
     void Awake()
@@ -59,6 +61,30 @@ public class GameController : MonoBehaviour {
 		mazeBase = new GameObject("Maze GameObject");
 		GenerateMaze();
 		DrawMaze();
+	}
+
+    void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.F1))
+		{
+			GenerateMaze();
+			PlaceThePlayer();
+		}
+
+        if(enemyAICounter < enemyAIMax)
+		{
+			if (Input.GetKeyDown("1"))
+			{
+				enemyAICounter++;
+				PlaceTheEnemy();
+			}
+
+			if (Input.GetKeyDown("2"))
+			{
+				enemyAICounter++;
+				PlaceTheEnemyTwo();
+			}
+		}
 	}
 
 	#region Update UI Values
@@ -99,6 +125,7 @@ public class GameController : MonoBehaviour {
 		GenerateMaze();
 		DrawMaze();
 		
+		
 	}
 
 	protected void GenerateMaze() {
@@ -107,6 +134,7 @@ public class GameController : MonoBehaviour {
 		UpdateHeightValue();
 		PlaceThePlayer();
 		PlaceTheEnemy();
+		
 	}
 
 	protected void DrawMaze() {
@@ -161,4 +189,14 @@ public class GameController : MonoBehaviour {
 
 
 	}
+
+    protected void PlaceTheEnemyTwo()
+	{
+		Point placeEnemy = maze.RandomOpenPosition();
+		GameObject enemy = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		enemy.transform.position = new Vector3(placeEnemy.x, 0.5f, placeEnemy.y * -1);
+		enemy.transform.localScale = new Vector3(1.0f, 0.5f, 1.0f);
+		enemy.AddComponent<EnemyTwo>();
+	}
+
 }

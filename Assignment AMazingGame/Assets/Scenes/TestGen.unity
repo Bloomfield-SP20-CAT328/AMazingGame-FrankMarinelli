@@ -2105,8 +2105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c547eca4e2c4aa0972313f4657922d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mazeWidth: 30
-  mazeHeight: 30
+  mazeWidth: 50
+  mazeHeight: 50
   mazeComplexity: 0.75
   mazeDensity: 0.75
   widthText: {fileID: 1695453228}
