@@ -84,6 +84,12 @@ public class GameController : MonoBehaviour {
 				enemyAICounter++;
 				PlaceTheEnemyTwo();
 			}
+
+			if (Input.GetKeyDown("3"))
+			{
+				enemyAICounter++;
+				PlaceTheEnemyThree();
+			}
 		}
 	}
 
@@ -199,4 +205,13 @@ public class GameController : MonoBehaviour {
 		enemy.AddComponent<EnemyTwo>();
 	}
 
+
+	protected void PlaceTheEnemyThree()
+	{
+		Point placeEnemy = maze.RandomOpenPosition();
+		GameObject enemy = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+		enemy.transform.position = new Vector3(placeEnemy.x, 0.5f, placeEnemy.y * -1);
+		enemy.transform.localScale = new Vector3(1.0f, 0.5f, 1.0f);
+		enemy.AddComponent<EnemyThree>();
+	}
 }

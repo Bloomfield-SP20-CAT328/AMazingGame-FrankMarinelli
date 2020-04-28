@@ -26,7 +26,8 @@ public class MovableCharacter : MonoBehaviour
 		gameObject.name = title;
 		gameObject.tag = tag;
 		gameObject.GetComponent<Renderer>().material.color = baseColor;
-    }
+		targetLocation = new Point((int)transform.position.x, (int)transform.position.z);
+	}
 
     private void OnDrawGizmos() { DrawRays(new Color(0.0f, 1.0f, 0.0f, 1.0f));  }
 
