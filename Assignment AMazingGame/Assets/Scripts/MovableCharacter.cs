@@ -21,7 +21,7 @@ public class MovableCharacter : MonoBehaviour
 	protected Direction direction = Direction.None;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
 		gameObject.name = title;
 		gameObject.tag = tag;

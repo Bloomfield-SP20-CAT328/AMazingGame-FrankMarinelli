@@ -28,6 +28,12 @@ public struct Point {
 		y = ptY;
 	}
 
+
+    public Point(float ptX, float ptY)
+	{
+		x = (int)ptX;
+		y = (int)ptY;
+	}
 	/// <summary>
 	/// Adds two points
 	/// </summary>

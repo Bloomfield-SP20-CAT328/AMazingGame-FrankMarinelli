@@ -55,7 +55,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	void Start () {
+	public void Start () {
 		UpdateDensityText();
 		UpdateComplexityText();
 		mazeBase = new GameObject("Maze GameObject");

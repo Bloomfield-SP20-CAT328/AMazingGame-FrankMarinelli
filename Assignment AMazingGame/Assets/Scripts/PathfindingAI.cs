@@ -74,8 +74,8 @@ public class PathfindingAI
 
 	protected bool NodeAdd(Node currentNode, Point finish, int xChange, int yChange)
 	{
-		Point changePoint = new Point(currentNode.x + xChange, currentNode.y, yChange);
-		int distance = Point.Distance(changePoint.finish);
+		Point changePoint = new Point(currentNode.x + xChange, currentNode.y + yChange);
+		int distance = Point.Distance(changePoint, finish);
 		Node nodeToAdd = new Node(changePoint.x, changePoint.y, distance, currentNode);
 		openNodes.Add(nodeToAdd);
 		return true;
